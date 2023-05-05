@@ -1,25 +1,45 @@
+const pokemonList = document.getElementById('pokemonList');
+const loadMoreButton = document.getElementById('loadMoreButton');
+let offset = 0;
+const limit = 10;
+const maxRecords = 251;
+
 function convertPokemonTypesToLi(pokemonTypes) {
     return pokemonTypes.map((typeSlot) => `<li class="type">${typeSlot.type.name}</li>`)
 }
-function convertPokemonToLi(pokemon) {
-    return `
-    <li class="pokemon ${pokemon.type}">
-    <span class="number">${pokemon.number}</span>
-    <span class="name">${pokemon.name}</span>
 
-    <div class="details">
+function loadPokemonItens(offset, limit) {
 
-    <ol class="types">
-       ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join("")}
-    </ol>
-<img src="${pokemon.photo}"
-    alt="${pokemon.name}">
-</div>
-</li>`;
+    pokeApi.getPokemons(offset, limit).then((pokemons = []) => {
+        const newHtml = pokemons.map((pokemon) => `
+        <li class="pokemon ${pokemon.type}">
+        <span class="number">${pokemon.number}</span>
+        <span class="name">${pokemon.name}</span>
+    
+        <div class="details">
+    
+        <ol class="types">
+           ${pokemon.types.map((type) => `<li class="type ${type}">${type}</li>`).join("")}
+        </ol>
+    <img src="${pokemon.photo}"
+        alt="${pokemon.name}">
+    </div>
+    </li>`).join("");
+        pokemonList.innerHTML += newHtml;
+    }).catch((err) => console.log(err));
+
 }
 
-const pokemonList = document.getElementById('pokemonList');
-pokeApi.getPokemons().then((pokemons = []) => {
-    pokemonList.innerHTML += pokemons.map(convertPokemonToLi).join("");
+loadPokemonItens(offset, limit);
+loadMoreButton.addEventListener('click', () => {
+    offset += limit;
+    const qtdRecordsWithNextPage = offset + limit;
+    if(qtdRecordsWithNextPage >= maxRecords) {
+        const newLimit = maxRecords - offset;
+        loadPokemonItens(offset, newLimit);
+        loadMoreButton.parentElement.removeChild(loadMoreButton);
+    } else {
+        loadPokemonItens(offset, limit);
+    }
 })
-    .catch((err) => console.log(err));
+
