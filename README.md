@@ -13,8 +13,8 @@ Pokedex usando a API REST "PokeApi". Feita com a Digital Innovation One.
 - criação de tags de forma dinâmica com JavaScript
 
 ## Futuras implementações
-[] Modo escuro
-[] Página de detalhes dos Pokémons
+- [] Modo escuro
+- [] Página de detalhes dos Pokémons
 ---
 Repositório do projeto original: https://github.com/digitalinnovationone/js-developer-pokedex
 Feito por Valenn.
